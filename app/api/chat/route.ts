@@ -7,8 +7,9 @@ import OpenAI from 'openai';
 
 // Initialize OpenAI client - API key will be taken from environment variable
 // IMPORTANT: Add OPENAI_API_KEY to your .env.local file
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+export async function POST(request: NextRequest) {
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
 });
 
 // System prompt defines the assistant's behavior and knowledge base
