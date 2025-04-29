@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 245, 245, 245;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  font-family: 'Inter', 'SF Pro Display', sans-serif;
+}
+
+@layer utilities {
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-6 py-3 rounded-md transition-all duration-300 text-sm font-medium;
+  }
+  .btn-primary {
+    @apply bg-accent-blue text-white hover:bg-opacity-90;
+  }
+  .section-heading {
+    @apply text-3xl md:text-4xl font-bold mb-8;
+  }
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-blue to-accent-green;
+  }
+} 
