@@ -3,14 +3,7 @@ export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import OpenAI from 'openai';
 
-// Initialize OpenAI client - API key will be taken from environment variable
-// IMPORTANT: Add OPENAI_API_KEY to your .env.local file
-export async function POST(request: NextRequest) {
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
 
 // System prompt defines the assistant's behavior and knowledge base
 const SYSTEM_PROMPT = `You are an AI assistant embedded in Gaurav Kashyap's portfolio website. 
@@ -91,6 +84,13 @@ LinkedIn: linkedin.com/in/gaurav-kashyap-909504172
 
 export async function POST(request: NextRequest) {
   try {
+    // ✅ Dynamically import OpenAI to avoid build-time env issues
+    const { default: OpenAI } = await import('openai');
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
     // Parse the request body
     const body = await request.json();
     const userMessages = body.messages || [];
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     // Combine system prompt with user messages
     const messages = [
       { role: 'system', content: SYSTEM_PROMPT },
-      ...userMessages.filter((msg: any) => msg.role !== 'system') // Remove any existing system messages
+      ...userMessages.filter((msg: any) => msg.role !== 'system'),
     ];
 
     // Call OpenAI API
@@ -112,18 +112,12 @@ export async function POST(request: NextRequest) {
     // Extract and return the assistant's message
     const assistantMessage = response.choices[0].message.content;
 
-    return NextResponse.json({
-      message: assistantMessage,
-    });
+    return NextResponse.json({ message: assistantMessage });
   } catch (error: any) {
     console.error('Error processing chat request:', error);
-    
     return NextResponse.json(
-      {
-        error: 'Error processing your request',
-        details: error.message,
-      },
+      { error: 'Error processing your request', details: error.message },
       { status: 500 }
     );
   }
-} 
+}
